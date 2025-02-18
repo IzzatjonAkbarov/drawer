@@ -33,7 +33,7 @@ export default function App() {
       .refine(
         (value) =>
           /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
-        { message: "Email qiymatlari Xato kiritilgan" }
+        { message: "wrong email values " }
       ),
     password: z
       .string()
@@ -77,15 +77,16 @@ export default function App() {
 
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
-
       toast.success("Login successful!");
 
-      setTimeout(() => {}, 2000);
-      toggleDrawer(true);
+      setTimeout(() => {
+        toggleDrawer(false);
+      }, 2000);
 
       reset();
     } else {
       toast.error("Email or password is incorrect.");
+      setIsSubmitted(false);
     }
   };
 
@@ -102,6 +103,7 @@ export default function App() {
             <h1 className="text-[#4e4b66] text-[28px] font-bold py-5 text-center">
               Вход или регистрация
             </h1>
+
             <div className="relative">
               <input
                 type="text"
@@ -115,11 +117,17 @@ export default function App() {
                 } rounded-lg block w-full outline-none p-2.5`}
                 placeholder="Адрес эл. почты"
               />
+              {errors.email && (
+                <p className="text-[12px] text-[#f00] text-end">
+                  {errors.email.message}
+                </p>
+              )}
+
               {(isSubmitted || errors.email) && (
                 <button
                   onClick={resettingTheEmail}
                   className="absolute top-3.5 right-3">
-                  {errors.email ? (
+                  {errors.email || !user ? (
                     <img src={xbar} alt="Error" />
                   ) : (
                     <img src={tick} alt="Success" />
@@ -141,11 +149,16 @@ export default function App() {
                     : "border-[#a0a3bc] text-[#a0a3bc] bg-gray-50"
                 } rounded-lg block w-full outline-none p-2.5`}
               />
-              {(isSubmitted || errors.password) && ( // Show icon only after submission or if there's an error
+              {errors.password && (
+                <p className="text-[12px] text-[#f00] text-end">
+                  {errors.password.message}
+                </p>
+              )}
+              {(isSubmitted || errors.password) && (
                 <button
                   onClick={resettingTheValue}
                   className="absolute top-3.5 right-3">
-                  {errors.password ? (
+                  {errors.password || !user ? (
                     <img src={xbar} alt="Error" />
                   ) : (
                     <img src={tick} alt="Success" />
