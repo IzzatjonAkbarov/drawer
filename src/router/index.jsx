@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Register from "../register";
+import Register from "../Register";
 import App from "../App";
 
 export const rooter = createBrowserRouter([
